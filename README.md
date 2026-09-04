@@ -1,6 +1,5 @@
 # ReflectAI — Your Personal Memory Mirror
 Your thoughts. Your memories. Your story.
-ReflectAI is a secure, user-authenticated journaling and personal reflection web application. It combines Google Firebase Authentication, isolated Cloud Firestore persistence, and the Google Gemini 3.6 Flash API to create a mindful conversational space for unpacking thoughts, exploring perspectives, and synthesizing emotional growth.
 ReflectAI is a secure, Gemini-powered personal memory mirror that helps users journal, revisit their past reflections, discover recurring patterns, connect memories, explore decisions, and write messages to their future selves.
 ---
 
