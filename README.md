@@ -1,7 +1,7 @@
 # ReflectAI — User-Authenticated Journaling with Gemini 3.6 Flash & Firestore
-
+Your thoughts. Your memories. Your story.
 ReflectAI is a secure, user-authenticated journaling and personal reflection web application. It combines Google Firebase Authentication, isolated Cloud Firestore persistence, and the Google Gemini 3.6 Flash API to create a mindful conversational space for unpacking thoughts, exploring perspectives, and synthesizing emotional growth.
-
+ReflectAI is a secure, Gemini-powered personal memory mirror that helps users journal, revisit their past reflections, discover recurring patterns, connect memories, explore decisions, and write messages to their future selves.
 ---
 
 ## Architecture & Tech Stack
@@ -14,7 +14,44 @@ ReflectAI is a secure, user-authenticated journaling and personal reflection web
 | **Sentiment Analytics** | D3.js Visualization | Dynamic timeline tracking emotional valence & tone across reflections. |
 | **Secret Hygiene** | Google Cloud Secret Manager | Dynamic API key injection without client exposure. |
 
----
+## Core Features
+
+### 🪞 Ask My Memory
+Ask questions about your previous reflections and retrieve relevant memories from your personal archive.
+
+### 🔎 Pattern Radar
+Discover recurring themes, challenges, coping strategies, and patterns across your reflections.
+
+### 🗺️ Memory Map
+Optionally attach locations to memories and revisit reflections associated with meaningful places.
+
+### ⏳ Reflection Replay
+Look back across a period of time and generate a narrative of how your thoughts and experiences evolved.
+
+### 🔗 Memory Connections
+Connect new reflections with related memories from the past.
+
+### ⚖️ Decision Timeline
+Record important decisions and revisit them using later journal evidence.
+
+### ✉️ Future Me
+Write private time-capsule messages to your future self with a scheduled unlock date.
+
+### 🔐 Privacy Center
+Understand how authentication, user isolation, Firestore rules, and server-side secrets protect personal reflections.
+
+## What Makes ReflectAI Different
+
+ReflectAI goes beyond traditional journaling.
+
+Instead of treating each journal entry as an isolated note, it turns a user's reflections into a personal memory system.
+
+The core experience follows:
+
+WRITE → REMEMBER → CONNECT → DISCOVER → REPLAY → REFLECT
+
+The application can retrieve previous memories, identify recurring patterns, connect related experiences, revisit decisions, and create future-facing reflections.
+
 
 ## 1. Environment & Prerequisites
 
@@ -35,8 +72,6 @@ gcloud services enable \
   firestore.googleapis.com \
   identitytoolkit.googleapis.com
 ```
-
----
 
 ## 2. Secret Management Setup (Gemini API Key)
 
@@ -80,6 +115,9 @@ service cloud.firestore {
     match /users/{userId}/entries/{entryId}/messages/{messageId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
+    match /users/{userId}/future_letters/{letterId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
   }
 }
 ```
@@ -176,21 +214,38 @@ Follow these sequential steps to verify all features and modules:
     - Seal an encrypted message to your future self with an unlock date.
     - Confirm letters remain locked until the set delivery date arrives.
 
-11. **Important Memories & Milestones**:
-    - Open **"Important"**.
-    - Bookmark cornerstone moments into categories: *Milestone*, *Achievement*, *Decision*, *Challenge*, *Person*, *Place*, *Goal*, *Idea*.
-
-12. **Memory Constellation (D3.js Graph)**:
-    - Click **"Constellation"**.
-    - Explore an interactive force-directed graph connecting thoughts, tags, and categories.
-    - Drag nodes to explore cluster relationships and click nodes to open reflections.
-
-13. **Semantic Search**:
+11. **Semantic Search**:
     - Click **"Search"**.
     - Perform concept queries (e.g., *"times I felt proud of learning something hard"*).
     - Review relevance rankings and AI explanation blurbs.
 
-14. **Isolated Firestore Persistence & Privacy Center**:
+12. **Isolated Firestore Persistence & Privacy Center**:
     - Click **"Privacy"** to review the cryptographic and access control architecture.
     - Check the **"Firestore Synced"** indicator.
     - Sign out, sign in with a different account, and confirm that the second user cannot see the first user's reflections or letters.
+
+## Security & Privacy
+
+- Google Sign-In through Firebase Authentication.
+- Firestore data is isolated by authenticated user ID.
+- Firestore Security Rules enforce owner-only access.
+- Gemini API credentials are kept server-side.
+- Secrets are managed through Google Cloud Secret Manager.
+- API keys are never hardcoded in client-side code.
+- Location tagging is optional and user-controlled.
+- Future Me content is intended to remain private until its unlock date.
+
+## Project Status
+
+ReflectAI is an ideathon prototype demonstrating:
+
+- Firebase Authentication
+- User-isolated Cloud Firestore
+- Gemini-powered reflection
+- Personal memory retrieval
+- Pattern analysis
+- Memory mapping
+- Reflection replay
+- Decision tracking
+- Future Me time capsules
+- Privacy-focused architecture
