@@ -421,6 +421,10 @@ ${formattedMemories.slice(0, 30000)}`;
       const cleanEntries = Array.isArray(entries) ? entries : [];
       if (cleanEntries.length < 2) {
         res.json({
+          hasSufficientEvidence: false,
+          insufficientEvidenceNote: "Pattern Radar requires at least 2 journal entries to detect meaningful recurring themes, emotional shifts, and personal rhythms.",
+          fromYourMemories: "Fewer than 2 entries exist in your archive. Record more reflections to reveal recurring patterns.",
+          possiblePattern: "No reliable patterns can be identified without multiple distinct entries.",
           themes: [],
           emotions: [],
           goals: [],
@@ -433,31 +437,48 @@ ${formattedMemories.slice(0, 30000)}`;
       }
 
       const formattedEntries = cleanEntries.map((e: any, idx: number) => {
-        const text = Array.isArray(e.messages) && e.messages[0] ? e.messages[0].content : e.summary || "";
-        return `[Entry ${idx + 1}] Date: ${e.createdAt} | Title: ${e.title} | Tags: ${(e.tags || []).join(", ")} | Tone: ${e.sentimentLabel || "Neutral"} | Text: ${text.slice(0, 400)}`;
+        const text = Array.isArray(e.messages) && e.messages[0]
+          ? e.messages.map((m: any) => `${m.role === "user" ? "User" : "ReflectAI"}: ${m.content}`).join(" ")
+          : e.summary || "";
+        const dateStr = e.createdAt
+          ? new Date(e.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })
+          : "Undated";
+        return `[Entry #${idx + 1} | ID: ${e.id}] Date: ${dateStr} (ISO: ${e.createdAt || "N/A"}) | Title: ${e.title || "Untitled"} | Tags: ${(e.tags || []).join(", ")} | Tone: ${e.sentimentLabel || "Neutral"} | Content: ${text.slice(0, 600)}`;
       }).join("\n");
 
       const systemInstruction = `You are the Pattern Radar engine for ReflectAI.
 Analyze the user's journal entries to discover recurring patterns, themes, emotional rhythms, goals, challenges, and positive trajectories.
-GROUNDING & ETHICAL DIRECTIVES:
-- Base every single observation STRICTLY on the user's provided reflections.
-- DO NOT present psychological diagnoses or medical conclusions. Frame all insights as gentle observations of their written journal ("In your reflections...", "You frequently note...").
-- Quantify frequencies where clear (e.g., "appears in 4 reflections").
+
+MANDATORY GROUNDING & ACCURACY DIRECTIVES:
+1. STRICT FACTUAL GROUNDING: Every single factual claim MUST be grounded strictly in the provided journal entries.
+   - NEVER invent memories, emotions, outcomes, psychological claims, or facts not supported by the user's entries.
+   - DO NOT present psychological diagnoses, medical conclusions, or assume feelings not explicitly written.
+2. CLEAR SEPARATION OF EVIDENCE VS INTERPRETATION:
+   You MUST strictly separate facts from interpretation:
+   - "fromYourMemories": Facts and explicit statements supported by entries, citing exact dates and titles (e.g., 'On Oct 12, 2025 in "Autumn Rain", you noted feeling calm...'). This section must contain ONLY factual evidence directly mentioned in the entries.
+   - "possiblePattern": Gemini's reflective interpretation of recurring behavioral patterns, thematic cycles, or mindset rhythms across reflections. This MUST be clearly labeled as an interpretation or potential pattern, never stated as an objective fact.
+3. INSUFFICIENT EVIDENCE RULE:
+   - If there isn't enough evidence to identify recurring patterns (e.g., entries are too brief, sparse, or disconnected), explicitly say so in "insufficientEvidenceNote" and set "hasSufficientEvidence": false.
+   - Never force or fabricate a pattern when evidence is weak.
 
 Output STRICTLY valid JSON formatted as:
 {
+  "hasSufficientEvidence": boolean,
+  "insufficientEvidenceNote": string or null,
+  "fromYourMemories": "Factual evidence directly drawn from the entries: cite specific dates, titles, and exact themes/challenges mentioned in the user's writing. If insufficient evidence, state so explicitly.",
+  "possiblePattern": "Gemini's reflective interpretation of potential patterns and recurring rhythms across your reflections (clearly labeled as interpretation). If insufficient evidence, state that patterns cannot be confirmed.",
   "themes": [{"name": string, "count": number, "description": string}],
   "emotions": [{"emotion": string, "trend": "Increasing" | "Decreasing" | "Stable", "context": string}],
   "goals": [{"goal": string, "status": "In Progress" | "Achieved" | "Evolving", "occurrences": number}],
   "challenges": [{"challenge": string, "recurrence": string, "copingPattern": string}],
   "positivePatterns": [{"pattern": string, "observation": string}],
-  "narrativeObservation": "A warm, 2-3 paragraph editorial synthesis of the overarching story and patterns their memories are revealing."
+  "narrativeObservation": "A warm, grounded 2-paragraph synthesis clearly balancing documented facts with possible interpretive patterns."
 }`;
 
       const { text: aiOutput, modelUsed } = await generateContentWithFallback(
         systemInstruction,
-        [{ role: "user", parts: [{ text: formattedEntries.slice(0, 20000) }] }],
-        0.3
+        [{ role: "user", parts: [{ text: formattedEntries.slice(0, 25000) }] }],
+        0.1
       );
 
       let parsed: any;
@@ -466,6 +487,10 @@ Output STRICTLY valid JSON formatted as:
         parsed = JSON.parse(clean);
       } catch {
         parsed = {
+          hasSufficientEvidence: true,
+          insufficientEvidenceNote: null,
+          fromYourMemories: "Direct observations from your recorded entries.",
+          possiblePattern: "Inferred behavioral rhythm across available entries.",
           themes: [],
           emotions: [],
           goals: [],
@@ -476,7 +501,16 @@ Output STRICTLY valid JSON formatted as:
       }
 
       res.json({
-        ...parsed,
+        hasSufficientEvidence: parsed.hasSufficientEvidence ?? true,
+        insufficientEvidenceNote: parsed.insufficientEvidenceNote || null,
+        fromYourMemories: parsed.fromYourMemories || "",
+        possiblePattern: parsed.possiblePattern || "",
+        themes: Array.isArray(parsed.themes) ? parsed.themes : [],
+        emotions: Array.isArray(parsed.emotions) ? parsed.emotions : [],
+        goals: Array.isArray(parsed.goals) ? parsed.goals : [],
+        challenges: Array.isArray(parsed.challenges) ? parsed.challenges : [],
+        positivePatterns: Array.isArray(parsed.positivePatterns) ? parsed.positivePatterns : [],
+        narrativeObservation: parsed.narrativeObservation || "",
         modelUsed,
       });
     } catch (err: any) {
@@ -560,6 +594,10 @@ Output STRICTLY valid JSON:
       const cleanEntries = Array.isArray(entries) ? entries : [];
       if (cleanEntries.length === 0) {
         res.json({
+          hasSufficientEvidence: false,
+          insufficientEvidenceNote: `You do not have any journal reflections recorded in the timeframe: "${timeframe}".`,
+          fromYourMemories: `No reflections found in your archive for "${timeframe}".`,
+          possiblePattern: "No chronological patterns or evolution can be inferred without journal entries.",
           thenSummary: "No reflections found in this timeframe.",
           alongTheWaySummary: "Pen your daily reflections to build this timeline.",
           nowSummary: "Your journey starts here.",
@@ -573,33 +611,49 @@ Output STRICTLY valid JSON:
       }
 
       const formatted = cleanEntries.map((e: any, idx: number) => {
-        return `[Entry #${idx + 1}] Date: ${e.createdAt} | Title: ${e.title} | Sentiment: ${e.sentimentLabel || "Reflective"} | Tags: ${(e.tags || []).join(", ")} | Summary: ${e.summary || (e.messages?.[0]?.content || "").slice(0, 300)}`;
+        const text = Array.isArray(e.messages) && e.messages[0]
+          ? e.messages.map((m: any) => `${m.role === "user" ? "User" : "ReflectAI"}: ${m.content}`).join(" ")
+          : e.summary || "";
+        const dateStr = e.createdAt
+          ? new Date(e.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })
+          : "Undated";
+        return `[Entry #${idx + 1} | ID: ${e.id}] Date: ${dateStr} (ISO: ${e.createdAt || "N/A"}) | Title: ${e.title || "Untitled"} | Sentiment: ${e.sentimentLabel || "Reflective"} | Tags: ${(e.tags || []).join(", ")} | Content: ${text.slice(0, 800)}`;
       }).join("\n");
 
       const systemInstruction = `You are the Reflection Replay storyteller for ReflectAI.
 Create a structured chronological evolution: "THEN → ALONG THE WAY → NOW" over the timeframe: "${timeframe}".
-Clearly highlight:
-- Changes in recurring themes and goals
-- Major decisions made
-- Repeated challenges and positive developments
-- How their emotional state or mindset shifted
 
-Clearly label observations as reflective interpretations from their journal.
+MANDATORY GROUNDING & ACCURACY DIRECTIVES:
+1. STRICT FACTUAL GROUNDING: Every single factual claim MUST be grounded strictly in the provided journal entries from this timeframe.
+   - NEVER invent memories, events, emotions, outcomes, psychological claims, or facts not supported by the user's entries.
+   - DO NOT assume psychological conclusions or invent milestones that the user never wrote about.
+2. CLEAR SEPARATION OF EVIDENCE VS INTERPRETATION:
+   You MUST strictly separate facts from interpretation:
+   - "fromYourMemories": Concrete facts supported by entries, with date and title citations for every claim (e.g., 'On Oct 14 in "Starting the New Role", you noted...'). This section must contain ONLY factual evidence recorded in the entries.
+   - "possiblePattern": Gemini's reflective interpretation of chronological trends, mindset shifts, and emotional trajectories. This MUST be clearly labeled as an interpretation or potential pattern, never stated as an established fact.
+3. INSUFFICIENT EVIDENCE RULE:
+   - If there isn't enough evidence to establish a meaningful evolution (e.g., only 1 entry or sparse entries without chronological progression), explicitly say so in "insufficientEvidenceNote" and set "hasSufficientEvidence": false.
+   - Never speculate or extrapolate beyond what is documented in the user's writing.
+
 Output STRICTLY valid JSON:
 {
-  "thenSummary": "Where you began at the start of this period...",
-  "alongTheWaySummary": "The shifts, challenges, and turns you navigated...",
-  "nowSummary": "Where you stand today in your latest reflections...",
+  "hasSufficientEvidence": boolean,
+  "insufficientEvidenceNote": string or null,
+  "fromYourMemories": "Chronological facts and milestones supported by the entries, citing dates and titles. If insufficient evidence, state so explicitly.",
+  "possiblePattern": "Gemini's reflective interpretation of possible patterns, shifts, and narrative evolution over time (clearly labeled as interpretation). If insufficient evidence, state that patterns cannot be confirmed.",
+  "thenSummary": "Where you began at the start of this period (based on earliest entries in timeframe)...",
+  "alongTheWaySummary": "The documented shifts, events, and challenges you navigated (from middle entries)...",
+  "nowSummary": "Where you stand in your latest reflections from this period...",
   "keyMilestones": [{"date": string, "title": string, "significance": string}],
   "shifts": [{"from": string, "to": string, "dimension": "Mindset" | "Emotion" | "Focus" | "Habit"}],
   "sentimentEvolution": string,
-  "narrative": "A cohesive, beautifully written editorial narrative of this season of your life (3-4 paragraphs)."
+  "narrative": "A cohesive, beautifully written editorial narrative of this season of your life (2-3 paragraphs), clearly separating documented facts from possible interpretive patterns."
 }`;
 
       const { text: aiOutput, modelUsed } = await generateContentWithFallback(
         systemInstruction,
-        [{ role: "user", parts: [{ text: formatted.slice(0, 20000) }] }],
-        0.4
+        [{ role: "user", parts: [{ text: formatted.slice(0, 25000) }] }],
+        0.1
       );
 
       let parsed: any;
@@ -608,6 +662,10 @@ Output STRICTLY valid JSON:
         parsed = JSON.parse(clean);
       } catch {
         parsed = {
+          hasSufficientEvidence: true,
+          insufficientEvidenceNote: null,
+          fromYourMemories: "Chronological observations from your recorded entries.",
+          possiblePattern: "Possible trajectory inferred across your reflections.",
           thenSummary: "Beginning of period",
           alongTheWaySummary: "Evolution across entries",
           nowSummary: "Current state",
@@ -618,7 +676,20 @@ Output STRICTLY valid JSON:
         };
       }
 
-      res.json({ ...parsed, modelUsed });
+      res.json({
+        hasSufficientEvidence: parsed.hasSufficientEvidence ?? true,
+        insufficientEvidenceNote: parsed.insufficientEvidenceNote || null,
+        fromYourMemories: parsed.fromYourMemories || "",
+        possiblePattern: parsed.possiblePattern || "",
+        thenSummary: parsed.thenSummary || "",
+        alongTheWaySummary: parsed.alongTheWaySummary || "",
+        nowSummary: parsed.nowSummary || "",
+        keyMilestones: Array.isArray(parsed.keyMilestones) ? parsed.keyMilestones : [],
+        shifts: Array.isArray(parsed.shifts) ? parsed.shifts : [],
+        sentimentEvolution: parsed.sentimentEvolution || "Steady",
+        narrative: parsed.narrative || "",
+        modelUsed,
+      });
     } catch (err: any) {
       console.error("[/api/gemini/reflection-replay error]", err);
       res.status(500).json({ error: "Failed to generate reflection replay." });

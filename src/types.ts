@@ -91,9 +91,38 @@ export interface MemoryQueryResult {
   fromYourMemories?: string;
   possiblePattern?: string;
   hasSufficientEvidence?: boolean;
-  insufficientEvidenceNote?: string;
+  insufficientEvidenceNote?: string | null;
   relevantEntryIds: string[];
   insights: string[];
+  modelUsed?: string;
+}
+
+export interface PatternRadarResult {
+  hasSufficientEvidence?: boolean;
+  insufficientEvidenceNote?: string | null;
+  fromYourMemories?: string;
+  possiblePattern?: string;
+  themes: { name: string; count: number; description: string }[];
+  emotions: { emotion: string; trend: string; context: string }[];
+  goals: { goal: string; status: string; occurrences: number }[];
+  challenges: { challenge: string; recurrence: string; copingPattern: string }[];
+  positivePatterns: { pattern: string; observation: string }[];
+  narrativeObservation: string;
+  modelUsed?: string;
+}
+
+export interface ReflectionReplayResult {
+  hasSufficientEvidence?: boolean;
+  insufficientEvidenceNote?: string | null;
+  fromYourMemories?: string;
+  possiblePattern?: string;
+  thenSummary: string;
+  alongTheWaySummary: string;
+  nowSummary: string;
+  keyMilestones: { date: string; title: string; significance: string }[];
+  shifts: { from: string; to: string; dimension: string }[];
+  sentimentEvolution: string;
+  narrative: string;
   modelUsed?: string;
 }
 

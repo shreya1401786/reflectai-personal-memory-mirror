@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { History, Sparkles, ArrowRight, Calendar, Loader2, RefreshCw } from "lucide-react";
-import { JournalEntry } from "../types";
+import { History, Sparkles, ArrowRight, Loader2, BookOpen, AlertCircle } from "lucide-react";
+import { JournalEntry, ReflectionReplayResult } from "../types";
 import { apiPost } from "../lib/api";
 
 interface ReflectionReplayProps {
@@ -12,16 +12,7 @@ export const ReflectionReplay: React.FC<ReflectionReplayProps> = ({ entries }) =
   const [timeframe, setTimeframe] = useState<string>("Last Month");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [replay, setReplay] = useState<{
-    thenSummary: string;
-    alongTheWaySummary: string;
-    nowSummary: string;
-    keyMilestones: { date: string; title: string; significance: string }[];
-    shifts: { from: string; to: string; dimension: string }[];
-    sentimentEvolution: string;
-    narrative: string;
-    modelUsed?: string;
-  } | null>(null);
+  const [replay, setReplay] = useState<ReflectionReplayResult | null>(null);
 
   const timeframes = ["Last Week", "Last Month", "Last 3 Months", "All Time"];
 
@@ -111,6 +102,67 @@ export const ReflectionReplay: React.FC<ReflectionReplayProps> = ({ entries }) =
 
       {replay && !loading && (
         <div className="space-y-8 animate-fadeIn">
+          {/* Insufficient Evidence Notice */}
+          {replay.hasSufficientEvidence === false && (
+            <div className="p-4 bg-[#FFFBEB] border border-[#FDE68A] text-[#92400E] text-xs font-sans flex items-start gap-3">
+              <AlertCircle className="w-4 h-4 text-[#D97706] shrink-0 mt-0.5" />
+              <div className="space-y-1">
+                <span className="font-bold block">Limited Evidence in Selected Timeframe</span>
+                <p className="leading-relaxed text-[#B45309]">
+                  {replay.insufficientEvidenceNote ||
+                    `There isn't enough evidence in your journal entries for "${timeframe}" to construct a chronological evolution with certainty. Factual claims are limited strictly to what was explicitly written.`}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Clearly Separated Evidence vs Interpretation */}
+          {(replay.fromYourMemories || replay.possiblePattern) && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* From your memories */}
+              <div className="bg-[#FAF9F6] border border-[#E5E1D8] p-5 space-y-2.5">
+                <div className="flex items-center justify-between pb-2 border-b border-[#EAE7DF]">
+                  <div className="flex items-center gap-2">
+                    <BookOpen className="w-4 h-4 text-[#D4A373]" />
+                    <span className="font-serif font-bold text-sm text-[#1A1A1A]">
+                      From your memories
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-sans uppercase tracking-wider text-[#666] bg-white px-2 py-0.5 border border-[#E5E1D8]">
+                    Supported by Entries
+                  </span>
+                </div>
+                <p className="text-[11px] font-sans text-[#777]">
+                  Documented timeline facts, events, and milestones cited directly from your reflections:
+                </p>
+                <div className="font-serif text-[#222] text-sm leading-relaxed whitespace-pre-line pt-1">
+                  {replay.fromYourMemories || "No specific memories were found directly mentioning this timeframe."}
+                </div>
+              </div>
+
+              {/* Possible pattern */}
+              <div className="bg-white border border-[#E5E1D8] p-5 space-y-2.5">
+                <div className="flex items-center justify-between pb-2 border-b border-[#EAE7DF]">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-[#D4A373]" />
+                    <span className="font-serif font-bold text-sm text-[#1A1A1A]">
+                      Possible pattern
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-sans uppercase tracking-wider text-[#D4A373] bg-[#FAF9F6] px-2 py-0.5 border border-[#EAE7DF] font-semibold">
+                    Gemini's Interpretation
+                  </span>
+                </div>
+                <p className="text-[11px] font-sans text-[#777]">
+                  Gemini's reflective interpretation of chronological mindset shifts (clearly labeled as interpretation):
+                </p>
+                <div className="font-serif text-[#222] text-sm leading-relaxed whitespace-pre-line pt-1">
+                  {replay.possiblePattern || "No conclusive pattern or evolution could be confirmed."}
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* THEN -> ALONG THE WAY -> NOW Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* THEN */}

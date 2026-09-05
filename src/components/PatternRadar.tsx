@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Sparkles, Activity, TrendingUp, AlertCircle, CheckCircle2, Loader2, RefreshCw } from "lucide-react";
-import { JournalEntry } from "../types";
+import { Sparkles, Activity, AlertCircle, CheckCircle2, Loader2, RefreshCw, BookOpen } from "lucide-react";
+import { JournalEntry, PatternRadarResult } from "../types";
 import { apiPost } from "../lib/api";
 
 interface PatternRadarProps {
@@ -11,15 +11,7 @@ interface PatternRadarProps {
 export const PatternRadar: React.FC<PatternRadarProps> = ({ entries }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [analysis, setAnalysis] = useState<{
-    themes: { name: string; count: number; description: string }[];
-    emotions: { emotion: string; trend: string; context: string }[];
-    goals: { goal: string; status: string; occurrences: number }[];
-    challenges: { challenge: string; recurrence: string; copingPattern: string }[];
-    positivePatterns: { pattern: string; observation: string }[];
-    narrativeObservation: string;
-    modelUsed?: string;
-  } | null>(null);
+  const [analysis, setAnalysis] = useState<PatternRadarResult | null>(null);
 
   const runAnalysis = async () => {
     if (entries.length < 2) return;
@@ -104,6 +96,67 @@ export const PatternRadar: React.FC<PatternRadarProps> = ({ entries }) => {
 
       {analysis && (
         <div className="space-y-6">
+          {/* Insufficient Evidence Notice */}
+          {analysis.hasSufficientEvidence === false && (
+            <div className="p-4 bg-[#FFFBEB] border border-[#FDE68A] text-[#92400E] text-xs font-sans flex items-start gap-3">
+              <AlertCircle className="w-4 h-4 text-[#D97706] shrink-0 mt-0.5" />
+              <div className="space-y-1">
+                <span className="font-bold block">Limited Evidence in Journal Archive</span>
+                <p className="leading-relaxed text-[#B45309]">
+                  {analysis.insufficientEvidenceNote ||
+                    "There isn't enough evidence across your entries to identify recurring patterns with certainty. Factual claims are limited strictly to what was explicitly written in your archive."}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Clearly Separated Evidence vs Interpretation */}
+          {(analysis.fromYourMemories || analysis.possiblePattern) && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* From your memories */}
+              <div className="bg-[#FAF9F6] border border-[#E5E1D8] p-5 space-y-2.5">
+                <div className="flex items-center justify-between pb-2 border-b border-[#EAE7DF]">
+                  <div className="flex items-center gap-2">
+                    <BookOpen className="w-4 h-4 text-[#D4A373]" />
+                    <span className="font-serif font-bold text-sm text-[#1A1A1A]">
+                      From your memories
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-sans uppercase tracking-wider text-[#666] bg-white px-2 py-0.5 border border-[#E5E1D8]">
+                    Supported by Entries
+                  </span>
+                </div>
+                <p className="text-[11px] font-sans text-[#777]">
+                  Documented facts, explicit themes, and events cited directly from your reflections:
+                </p>
+                <div className="font-serif text-[#222] text-sm leading-relaxed whitespace-pre-line pt-1">
+                  {analysis.fromYourMemories || "No specific memories were found directly mentioning these themes."}
+                </div>
+              </div>
+
+              {/* Possible pattern */}
+              <div className="bg-white border border-[#E5E1D8] p-5 space-y-2.5">
+                <div className="flex items-center justify-between pb-2 border-b border-[#EAE7DF]">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-[#D4A373]" />
+                    <span className="font-serif font-bold text-sm text-[#1A1A1A]">
+                      Possible pattern
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-sans uppercase tracking-wider text-[#D4A373] bg-[#FAF9F6] px-2 py-0.5 border border-[#EAE7DF] font-semibold">
+                    Gemini's Interpretation
+                  </span>
+                </div>
+                <p className="text-[11px] font-sans text-[#777]">
+                  Gemini's reflective interpretation of behavioral rhythms (clearly labeled as interpretation):
+                </p>
+                <div className="font-serif text-[#222] text-sm leading-relaxed whitespace-pre-line pt-1">
+                  {analysis.possiblePattern || "No conclusive patterns can be confirmed from available records."}
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Narrative Synthesis */}
           <div className="bg-white border border-[#E5E1D8] p-6 sm:p-8 space-y-3">
             <div className="flex items-center gap-2 pb-3 border-b border-[#EAE7DF]">
