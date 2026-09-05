@@ -11,10 +11,10 @@ export const PrivacyCenter: React.FC = () => {
           <span>Security & Data Sovereignty</span>
         </div>
         <h1 className="font-serif text-3xl sm:text-4xl text-[#1A1A1A] font-medium tracking-tight mt-2 italic">
-          ReflectAI Privacy Architecture
+          Mindloom Privacy Architecture
         </h1>
         <p className="text-sm font-sans text-[#666] leading-relaxed mt-3">
-          Reflections are deeply personal. We built ReflectAI with strict data isolation, zero cross-user leakage, and server-side secret management. Here is exactly how your data is protected.
+          Reflections are deeply personal. We built Mindloom with strict data isolation, zero cross-user leakage, and server-side secret management. Here is exactly how your data is protected.
         </p>
       </div>
 
@@ -84,7 +84,7 @@ export const PrivacyCenter: React.FC = () => {
             </h3>
           </div>
           <p className="text-xs font-sans text-[#666] leading-relaxed">
-            ReflectAI NEVER tracks your location in the background. Geotagging is 100% voluntary and only attached when you click "Tag Location to Entry" in the Memory Map.
+            Mindloom NEVER tracks your location in the background. Geotagging is 100% voluntary and only attached when you click "Tag Location to Entry" in the Memory Map.
           </p>
           <p className="text-xs font-sans text-[#666] leading-relaxed">
             You can remove or edit location tags from any reflection at any time.

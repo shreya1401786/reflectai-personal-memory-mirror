@@ -80,12 +80,12 @@ export const HistorySidebar: React.FC<HistorySidebarProps> = ({
   return (
     <aside
       id="history-sidebar"
-      className={`fixed inset-y-0 left-0 z-40 w-80 sm:w-88 bg-[#FBF9F5] border-r border-[#E5E1D8] flex flex-col transition-transform duration-300 ease-in-out md:static md:translate-x-0 ${
-        isOpen ? "translate-x-0" : "-translate-x-full"
+      className={`shrink-0 w-60 sm:w-68 bg-[#FBF9F5] border-r border-[#E5E1D8] flex flex-col h-full transition-all duration-200 ease-in-out ${
+        isOpen ? "flex" : "hidden"
       }`}
     >
       {/* Sidebar Header */}
-      <div className="p-5 border-b border-[#E5E1D8] flex items-center justify-between bg-[#F4F1EA]">
+      <div className="p-5 border-b border-[#E5E1D8] flex items-center justify-between bg-[#F4F1EA] shrink-0">
         <div>
           <h2 className="font-serif text-lg font-bold italic text-[#1A1A1A] flex items-center gap-2">
             <span>Archive</span>
@@ -113,7 +113,7 @@ export const HistorySidebar: React.FC<HistorySidebarProps> = ({
           <button
             id="btn-sidebar-close"
             onClick={onClose}
-            className="p-2 text-[#8C8C8C] hover:text-[#1A1A1A] hover:bg-[#EAE7DF] transition-colors md:hidden cursor-pointer"
+            className="p-2 text-[#8C8C8C] hover:text-[#1A1A1A] hover:bg-[#EAE7DF] transition-colors cursor-pointer"
             title="Close Sidebar"
           >
             <X className="w-3.5 h-3.5" />
@@ -122,7 +122,7 @@ export const HistorySidebar: React.FC<HistorySidebarProps> = ({
       </div>
 
       {/* Search and Filters */}
-      <div className="p-4 border-b border-[#E5E1D8] space-y-3 bg-[#FAF9F6]">
+      <div className="p-4 border-b border-[#E5E1D8] space-y-3 bg-[#FAF9F6] shrink-0">
         <div className="relative">
           <Search className="w-3.5 h-3.5 text-[#8C8C8C] absolute left-3 top-1/2 -translate-y-1/2" />
           <input

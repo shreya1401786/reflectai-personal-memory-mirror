@@ -62,7 +62,7 @@ export const MemoryMirror: React.FC<MemoryMirrorProps> = ({
             Talk to Your Past Self
           </h1>
           <p className="text-sm font-sans text-[#666] leading-relaxed mt-3">
-            Ask questions of your authorized reflections across time. ReflectAI searches your personal journal archive, retrieves relevant memories without exposing them to other users, and lets Gemini synthesize how your perspective has evolved.
+            Ask questions of your authorized reflections across time. Mindloom searches your personal journal archive, retrieves relevant memories without exposing them to other users, and lets Gemini synthesize how your perspective has evolved.
           </p>
         </div>
 
@@ -291,7 +291,7 @@ export const MemoryMirror: React.FC<MemoryMirrorProps> = ({
           <MessageSquare className="w-8 h-8 text-[#A0A0A0] mx-auto stroke-1" />
           <h3 className="font-serif text-lg italic text-[#1A1A1A]">Your Archive Awaits</h3>
           <p className="text-xs font-sans text-[#777] max-w-md mx-auto leading-relaxed">
-            Enter any thought or choose an inquiry above. ReflectAI compares your current state with your past words to illuminate your personal growth.
+            Enter any thought or choose an inquiry above. Mindloom compares your current state with your past words to illuminate your personal growth.
           </p>
         </div>
       )}

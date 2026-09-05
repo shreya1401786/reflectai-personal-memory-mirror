@@ -182,7 +182,7 @@ async function startServer() {
           break;
       }
 
-      const systemInstruction = `You are ReflectAI, an empathetic, emotionally intelligent, and constructive personal reflection and journaling partner.
+      const systemInstruction = `You are Mindloom, an empathetic, emotionally intelligent, and constructive personal reflection and journaling partner.
 Your role is to help the user unpack thoughts, gain self-awareness, reflect on feelings, and find clarity.
 Mode: ${modeInstruction}
 Keep responses warm, supportive, clear, and formatted cleanly with markdown. Avoid robotic clichés or over-dramatic platitudes. Speak directly and thoughtfully.`;
@@ -309,7 +309,7 @@ Output STRICTLY valid JSON with no markdown backticks or commentary.`;
       // Compact authorized memory excerpts to feed into the model with explicit dates and titles
       const formattedMemories = cleanEntries.map((e: any, idx: number) => {
         const textSnippets = Array.isArray(e.messages)
-          ? e.messages.map((m: any) => `${m.role === "user" ? "User" : "ReflectAI"}: ${m.content}`).join("\n")
+          ? e.messages.map((m: any) => `${m.role === "user" ? "User" : "Mindloom"}: ${m.content}`).join("\n")
           : e.summary || "";
         const loc = e.location?.name ? ` | Location: ${e.location.name}` : "";
         const dec = e.decision?.isDecision ? ` | Decision [${e.decision.stage}]: ${e.decision.decisionText || ""}` : "";
@@ -328,7 +328,7 @@ ${textSnippets.slice(0, 1500)}
 `;
       }).join("\n\n");
 
-      const systemInstruction = `You are the flagship "Personal Memory Mirror" intelligence for ReflectAI.
+      const systemInstruction = `You are the flagship "Personal Memory Mirror" intelligence for Mindloom.
 The authenticated user is asking a question about their own past reflections, experiences, emotions, or decisions.
 You are provided with their authorized journal entries.
 
@@ -438,7 +438,7 @@ ${formattedMemories.slice(0, 30000)}`;
 
       const formattedEntries = cleanEntries.map((e: any, idx: number) => {
         const text = Array.isArray(e.messages) && e.messages[0]
-          ? e.messages.map((m: any) => `${m.role === "user" ? "User" : "ReflectAI"}: ${m.content}`).join(" ")
+          ? e.messages.map((m: any) => `${m.role === "user" ? "User" : "Mindloom"}: ${m.content}`).join(" ")
           : e.summary || "";
         const dateStr = e.createdAt
           ? new Date(e.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })
@@ -446,7 +446,7 @@ ${formattedMemories.slice(0, 30000)}`;
         return `[Entry #${idx + 1} | ID: ${e.id}] Date: ${dateStr} (ISO: ${e.createdAt || "N/A"}) | Title: ${e.title || "Untitled"} | Tags: ${(e.tags || []).join(", ")} | Tone: ${e.sentimentLabel || "Neutral"} | Content: ${text.slice(0, 600)}`;
       }).join("\n");
 
-      const systemInstruction = `You are the Pattern Radar engine for ReflectAI.
+      const systemInstruction = `You are the Pattern Radar engine for Mindloom.
 Analyze the user's journal entries to discover recurring patterns, themes, emotional rhythms, goals, challenges, and positive trajectories.
 
 MANDATORY GROUNDING & ACCURACY DIRECTIVES:
@@ -543,7 +543,7 @@ Output STRICTLY valid JSON formatted as:
         tags: e.tags,
       }));
 
-      const systemInstruction = `You are a memory association engine for ReflectAI.
+      const systemInstruction = `You are a memory association engine for Mindloom.
 Analyze a newly written reflection against a list of the user's past journal entries.
 Determine if there is a genuine, meaningful connection (recurring dilemma, similar emotional turning point, related project, or shared insight).
 DO NOT fabricate connections or claim a connection when insufficient evidence exists. If no strong link exists, set "hasConnection": false.
@@ -612,7 +612,7 @@ Output STRICTLY valid JSON:
 
       const formatted = cleanEntries.map((e: any, idx: number) => {
         const text = Array.isArray(e.messages) && e.messages[0]
-          ? e.messages.map((m: any) => `${m.role === "user" ? "User" : "ReflectAI"}: ${m.content}`).join(" ")
+          ? e.messages.map((m: any) => `${m.role === "user" ? "User" : "Mindloom"}: ${m.content}`).join(" ")
           : e.summary || "";
         const dateStr = e.createdAt
           ? new Date(e.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })
@@ -620,7 +620,7 @@ Output STRICTLY valid JSON:
         return `[Entry #${idx + 1} | ID: ${e.id}] Date: ${dateStr} (ISO: ${e.createdAt || "N/A"}) | Title: ${e.title || "Untitled"} | Sentiment: ${e.sentimentLabel || "Reflective"} | Tags: ${(e.tags || []).join(", ")} | Content: ${text.slice(0, 800)}`;
       }).join("\n");
 
-      const systemInstruction = `You are the Reflection Replay storyteller for ReflectAI.
+      const systemInstruction = `You are the Reflection Replay storyteller for Mindloom.
 Create a structured chronological evolution: "THEN → ALONG THE WAY → NOW" over the timeframe: "${timeframe}".
 
 MANDATORY GROUNDING & ACCURACY DIRECTIVES:
@@ -724,7 +724,7 @@ Output STRICTLY valid JSON:
         snippet: (e.summary || e.messages?.[0]?.content || "").slice(0, 500),
       }));
 
-      const systemInstruction = `You are a semantic memory search engine for ReflectAI.
+      const systemInstruction = `You are a semantic memory search engine for Mindloom.
 The user is searching for past reflections using natural conceptual language (e.g., "times I felt nervous before a presentation" or "when I was excited about starting something new").
 Score each entry for semantic relevance to the concept (score 0.0 to 1.0).
 Return only entries with relevance score >= 0.35, ranked highest first.
@@ -787,7 +787,7 @@ Details: ${decisionEntry.decision?.decisionText || decisionEntry.summary || ""}`
         ? subsequentEntries.map((e: any) => `Date: ${e.createdAt} | Title: ${e.title} | Snippet: ${(e.summary || e.messages?.[0]?.content || "").slice(0, 400)}`).join("\n")
         : "None provided";
 
-      const systemInstruction = `You are a decision retrospective evaluator for ReflectAI.
+      const systemInstruction = `You are a decision retrospective evaluator for Mindloom.
 The user made or considered a decision in a past reflection.
 Examine their subsequent reflections to trace:
 1. Considering / Deliberation
@@ -844,7 +844,7 @@ Output STRICTLY valid JSON:
   }
 
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`[ReflectAI Server] running on http://0.0.0.0:${PORT}`);
+    console.log(`[Mindloom Server] running on http://0.0.0.0:${PORT}`);
   });
 }
 

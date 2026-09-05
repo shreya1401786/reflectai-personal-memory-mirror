@@ -43,7 +43,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </h1>
 
         <p className="mt-8 text-base sm:text-lg text-[#5A5A5A] max-w-2xl font-serif italic leading-relaxed">
-          ReflectAI offers a quiet, unhurried space for daily self-examination. Write long-form reflections, engage in empathetic multi-turn dialogue, derive structured perspectives, and preserve your inner thoughts securely in your private cloud journal.
+          Mindloom offers a quiet, unhurried space for daily self-examination. Weaving your memories into meaning, write long-form reflections, engage in empathetic multi-turn dialogue, derive structured perspectives, and preserve your inner thoughts securely in your private cloud journal.
         </p>
 
         {/* Sign In Action Card */}
@@ -156,7 +156,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       <footer className="border-t border-[#E5E1D8] py-8 text-center text-xs text-[#8C8C8C] font-sans bg-[#FBF9F5]">
         <div className="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <span className="uppercase tracking-widest text-[10px]">
-            ReflectAI • Powered by Google Gemini 3.6 Flash & Cloud Firestore
+            Mindloom • Powered by Google Gemini 3.6 Flash & Cloud Firestore
           </span>
           <span className="text-[10px] font-mono text-[#A0A0A0]">Owner-Bound Firestore Rules Active</span>
         </div>

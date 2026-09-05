@@ -71,7 +71,7 @@ export default function App() {
   const [selectedMode, setSelectedMode] = useState<ReflectionMode>("reflection");
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [isSummarizing, setIsSummarizing] = useState<boolean>(false);
-  const [historyOpen, setHistoryOpen] = useState<boolean>(false);
+  const [historyOpen, setHistoryOpen] = useState<boolean>(true);
   const [saveStatus, setSaveStatus] = useState<"synced" | "saving" | "error">("synced");
 
   // Error & Retry State
@@ -437,7 +437,7 @@ export default function App() {
       <div className="min-h-screen bg-[#FAF9F6] flex flex-col items-center justify-center text-[#1A1A1A]">
         <div className="w-10 h-10 border-2 border-[#1A1A1A] border-t-transparent rounded-full animate-spin mb-4" />
         <p className="font-serif italic text-base tracking-wide text-[#8C8C8C]">
-          ReflectAI is opening your archive...
+          Mindloom is opening your archive...
         </p>
       </div>
     );
@@ -468,7 +468,7 @@ export default function App() {
 
   // Authenticated Private Dashboard
   return (
-    <div className="min-h-screen bg-[#FAF9F6] text-[#1A1A1A] flex flex-col font-sans">
+    <div className="h-screen bg-[#FAF9F6] text-[#1A1A1A] flex flex-col font-sans overflow-hidden">
       <Navbar
         user={currentUser}
         onSignOut={handleSignOut}
@@ -504,7 +504,7 @@ export default function App() {
         />
 
         {/* Main Dashboard Workspace based on ActiveView */}
-        <main className="flex-1 flex flex-col overflow-y-auto px-4 sm:px-8 py-8">
+        <main className={`flex-1 flex flex-col overflow-y-auto px-4 sm:px-8 py-8 ${historyOpen ? "hidden md:flex" : "flex"}`}>
           {/* Error Banner */}
           {errorMessage && (
             <ErrorBanner
@@ -776,8 +776,8 @@ export default function App() {
                 <div ref={messagesEndRef} />
               </div>
 
-              {/* Sticky Journal Editor & Mode Controls */}
-              <div className="sticky bottom-0 pt-4 pb-2 z-10 bg-gradient-to-t from-[#FAF9F6] via-[#FAF9F6]/90 to-transparent">
+              {/* Journal Editor & Mode Controls */}
+              <div className="mt-6 pb-6">
                 <JournalEditor
                   inputPrompt={inputPrompt}
                   setInputPrompt={setInputPrompt}

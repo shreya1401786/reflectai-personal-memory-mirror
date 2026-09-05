@@ -88,7 +88,7 @@ export const MemoryMap: React.FC<MemoryMapProps> = ({
             Memory Map
           </h1>
           <p className="text-xs sm:text-sm font-sans text-[#666] mt-2 max-w-2xl">
-            Explore memories associated with places you've paused to write in. ReflectAI protects your privacy with strict per-user isolation: location is never tracked continuously and is only saved when explicitly attached.
+            Explore memories associated with places you've paused to write in. Mindloom protects your privacy with strict per-user isolation: location is never tracked continuously and is only saved when explicitly attached.
           </p>
         </div>
 

@@ -54,7 +54,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   ];
 
   return (
-    <header id="main-header" className="sticky top-0 z-30 bg-[#FAF9F6]/95 text-[#1A1A1A] border-b border-[#E5E1D8] backdrop-blur-md">
+    <header id="main-header" className="shrink-0 sticky top-0 z-30 bg-[#FAF9F6]/95 text-[#1A1A1A] border-b border-[#E5E1D8] backdrop-blur-md">
       {/* Top Header Bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-8 h-18 flex items-center justify-between">
         {/* Logo & Brand */}
@@ -63,19 +63,19 @@ export const Navbar: React.FC<NavbarProps> = ({
           className="flex items-center gap-3.5 cursor-pointer select-none group"
         >
           <div className="w-9 h-9 border border-[#1A1A1A] bg-[#F4F1EA] group-hover:bg-[#1A1A1A] group-hover:text-white transition-colors flex items-center justify-center italic text-xl font-serif text-[#1A1A1A] shadow-xs">
-            R
+            M
           </div>
           <div>
             <div className="flex items-center gap-2.5">
               <span className="font-serif text-2xl font-bold tracking-tight italic text-[#1A1A1A] underline decoration-1 underline-offset-4">
-                ReflectAI
+                Mindloom
               </span>
               <span className="text-[9px] uppercase tracking-[0.2em] font-sans font-bold text-[#D4A373] bg-[#F4F1EA] border border-[#E5E1D8] px-2 py-0.5">
                 Memory Mirror
               </span>
             </div>
             <p className="text-[9px] uppercase tracking-[0.2em] font-sans text-[#8C8C8C] hidden sm:block">
-              Understanding the Story Your Memories Tell
+              Weaving your memories into meaning.
             </p>
           </div>
         </div>

@@ -82,7 +82,7 @@ export const DecisionsTimeline: React.FC<DecisionsTimelineProps> = ({
             Decision Timeline
           </h1>
           <p className="text-xs sm:text-sm font-sans text-[#666] mt-2 max-w-2xl">
-            Track turning points across stages: Considering → Decided → Outcome → Reflection. Ask ReflectAI "How did this decision turn out?" grounded in what you later documented.
+            Track turning points across stages: Considering → Decided → Outcome → Reflection. Ask Mindloom "How did this decision turn out?" grounded in what you later documented.
           </p>
         </div>
 
@@ -178,7 +178,7 @@ export const DecisionsTimeline: React.FC<DecisionsTimelineProps> = ({
           <Scale className="w-10 h-10 text-[#A0A0A0] mx-auto stroke-1" />
           <h2 className="font-serif text-2xl italic text-[#1A1A1A]">No Decisions Marked Yet</h2>
           <p className="text-sm font-sans text-[#666] max-w-lg mx-auto leading-relaxed">
-            Mark reflections where you considered a path, took a leap, or evaluated an outcome. ReflectAI helps you see how past choices actually unfolded over subsequent months.
+            Mark reflections where you considered a path, took a leap, or evaluated an outcome. Mindloom helps you see how past choices actually unfolded over subsequent months.
           </p>
           <button
             onClick={() => {

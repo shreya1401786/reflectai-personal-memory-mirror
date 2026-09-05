@@ -1,6 +1,6 @@
 {
-  "name": "ReflectAI",
-  "description": "A secure, user-authenticated journaling and reflection web application powered by Gemini 3.6 Flash and Cloud Firestore with Google Sign-In.",
+  "name": "Mindloom",
+  "description": "Weaving your memories into meaning. A secure, user-authenticated personal memory mirror powered by Gemini 3.6 Flash and Cloud Firestore with Google Sign-In.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

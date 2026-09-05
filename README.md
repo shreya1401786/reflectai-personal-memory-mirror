@@ -1,6 +1,6 @@
-# ReflectAI — Your Personal Memory Mirror
-Your thoughts. Your memories. Your story.
-ReflectAI is a secure, Gemini-powered personal memory mirror that helps users journal, revisit their past reflections, discover recurring patterns, connect memories, explore decisions, and write messages to their future selves.
+# Mindloom — Your Personal Memory Mirror
+Weaving your memories into meaning.
+Mindloom is a secure, Gemini-powered personal memory mirror that helps users journal, revisit their past reflections, discover recurring patterns, connect memories, explore decisions, and write messages to their future selves.
 ---
 
 ## Architecture & Tech Stack
@@ -39,9 +39,9 @@ Write private time-capsule messages to your future self with a scheduled unlock 
 ### 🔐 Privacy Center
 Understand how authentication, user isolation, Firestore rules, and server-side secrets protect personal reflections.
 
-## What Makes ReflectAI Different
+## What Makes Mindloom Different
 
-ReflectAI goes beyond traditional journaling.
+Mindloom goes beyond traditional journaling.
 
 Instead of treating each journal entry as an isolated note, it turns a user's reflections into a personal memory system.
 
@@ -236,7 +236,7 @@ Follow these sequential steps to verify all features and modules:
 
 ## Project Status
 
-ReflectAI is an ideathon prototype demonstrating:
+Mindloom is an ideathon prototype demonstrating:
 
 - Firebase Authentication
 - User-isolated Cloud Firestore

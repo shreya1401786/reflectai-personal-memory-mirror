@@ -73,7 +73,7 @@ export const FutureMe: React.FC<FutureMeProps> = ({
             Future Me
           </h1>
           <p className="text-xs sm:text-sm font-sans text-[#666] mt-2 max-w-2xl">
-            Pen a private letter to your future self. When that future date arrives, ReflectAI surfaces your past perspective so you can reflect on how your thoughts, priorities, and life unfolded.
+            Pen a private letter to your future self. When that future date arrives, Mindloom surfaces your past perspective so you can reflect on how your thoughts, priorities, and life unfolded.
           </p>
         </div>
 
